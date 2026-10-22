@@ -19,12 +19,14 @@ Hemşirelik öğrencisi bir arkadaşım için, derste kullanılacak çoktan seç
 | Framework | **Next.js (App Router) + TypeScript** | Erdem'in ana yığını. Vercel ile sorunsuz. |
 | Stil | **Tailwind CSS** | Hızlı ve tutarlı arayüz geliştirme. |
 | Animasyon | **Framer Motion** | Doğru/yanlış ve geçiş animasyonları. |
-| Ses | **Howler.js** veya HTMLAudioElement | Ses efektleri. Önceden yükleme (preload) şart. |
+| Ses | **Web Audio API ile sentez** (`src/lib/sound.ts`) | Ses dosyası yok: özgün, lisans derdi yok, önceden yükleme gerekmez. Dosyaya geçilirse CC0 kaynak + `public/sounds/CREDITS.md`. |
 | Veritabanı | **Firebase Firestore** (Spark / ücretsiz plan) | Sunucu yönetimi yok, ücretsiz kota bu ölçek için fazlasıyla yeterli. |
 | Kimlik doğrulama | **Firebase Auth (e-posta/şifre)** | Sadece admin paneli için. |
+| Excel | **read-excel-file** / **write-excel-file** | Soru içe/dışa aktarma; aynı yazarın küçük paketleri, ihtiyaç anında yüklenir. |
+| Çevrimdışı | **Firestore IndexedDB önbelleği** + `public/sw.js` | İnternet kesilince yarışma devam eder; ek kütüphane yok. |
 | Yayın | **Vercel** (Hobby / ücretsiz) | Linkle paylaşım. |
 
-Yeni bir kütüphane eklemeden önce gerekçesini söyle. Küçük ve yaygın yardımcı paketlerde sorman gerekmez.
+Kurulum ve mimari ayrıntıları `docs/README.md` içinde. Yeni bir kütüphane eklemeden önce gerekçesini söyle. Küçük ve yaygın yardımcı paketlerde sorman gerekmez.
 
 ## 3. Özellikler
 
@@ -94,6 +96,7 @@ admins/{uid}                     // varsa o kullanıcı admindir; Firebase konso
 - Uygulamanın mantığı basit, **arayüz kalitesi projenin asıl değeri.** Sıradan/şablon görünümden kaçın.
 - Bilgi yarışması atmosferi hedeflenir: dramatik ışık, koyu tema, parlak vurgular, gerilim. Ancak **TV programının logosu, müziği, ses efektleri veya birebir görsel tasarımı kullanılmaz.** Tasarım ve sesler özgün ya da açık lisanslı olmalı.
 - Ses dosyaları telifsiz/uygun lisanslı kaynaklardan alınmalı ya da Web Audio ile üretilmeli. Kaynağını `public/sounds/CREDITS.md` dosyasına yaz.
+- **Renk temaları:** Gece (koyu, varsayılan, projeksiyon için), Gündüz (açık), Neon (canlı mor/pembe/turkuaz). Kurulum ekranı, yarışma üst çubuğu (`T` kısayolu) ve admin panelinden değiştirilir; seçim bilgisayar başına hatırlanır. Renkler yalnızca `src/app/globals.css` içindeki token'lardan gelir, bileşenlerde sabit renk kullanma.
 - Arayüz dili **Türkçe.** Kod, değişken ve commit mesajları İngilizce olabilir.
 - Admin paneli yarışma ekranından sade olabilir ama teknik olmayan biri için anlaşılır olmalı.
 - Erişilebilirlik: renk tek başına anlam taşımasın, doğru/yanlış ayrıca ikon/metinle de belirtilsin (projeksiyonda renkler soluk görünebilir).
