@@ -113,14 +113,14 @@ admins/{uid}                     // varsa o kullanıcı admindir; Firebase konso
 
 ## 8. AÇIK NOKTALAR (sırası gelince bana sor)
 
-- [ ] Bir yarışmada kaç soru sorulacak? Varsayılan ve üst sınır.
-- [ ] Puanlama olacak mı? (Ör. sadece doğru sayısı mı, yoksa ödül basamakları/puan tablosu mu?)
+- [x] Bir yarışmada kaç soru sorulacak? Varsayılan ve üst sınır. → Varsayılan 15, üst sınır 40 (`src/lib/quizConfig.ts`).
+- [x] Puanlama olacak mı? → Evet. Toplam puan (varsayılan 100, kurulum ekranında değiştirilebilir) soru sayısına eşit bölünür. Soru başı puan ondalıklı gösterilir (6,67), toplam puan tam sayıya yuvarlanır (hepsini bilen tam puanı alır).
 - [ ] Takım modu olacak mı? (Sınıf gruplara ayrılıp sırayla mı yarışacak?)
 - [ ] Joker hakları (yarı yarıya vb.) olacak mı?
-- [ ] Yanlış cevapta yarışma bitiyor mu, devam mı ediyor?
+- [x] Yanlış cevapta yarışma bitiyor mu, devam mı ediyor? → Devam ediyor. Yanlış cevap 0 puan, eksi puan yok.
 - [ ] Süre dolunca ne olacak? (Yanlış sayılsın mı, doğru cevap gösterilip geçilsin mi?)
 - [x] Doğru cevaptan sonra açıklama/bilgi notu gösterilecek mi? → Evet, isteğe bağlı `explanation` alanı. *(Ekranda nasıl gösterileceği yarışma ekranında kararlaştırılacak.)*
-- [x] Sorular bize hangi formatta gelecek? Toplu içe aktarma gerekli mi? → Şimdilik hayır; sorular admin panelinden elle girilecek. İhtiyaç olursa sonra eklenir.
+- [x] Sorular bize hangi formatta gelecek? Toplu içe aktarma gerekli mi? → Excel (.xlsx) içe aktarma var. Şablon: `public/sablon/soru-sablonu.xlsx`, sütunlar: Soru, A–F, Doğru Cevap (harf), Açıklama. Sorular paneldeki açık havuza eklenir; aynı metinli sorular atlanır. Okuma: `read-excel-file/universal`, mantık: `src/lib/importQuestions.ts`.
 - [ ] Görseller nerede barındırılacak? (Bkz. bölüm 4.)
 - [ ] Uygulamanın son adı ve logosu.
 - [ ] Vercel alan adı (`*.vercel.app` alt alan adı).

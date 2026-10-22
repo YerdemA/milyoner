@@ -12,6 +12,7 @@ import { getErrorMessage } from "@/lib/errors";
 import { getPool } from "@/lib/firestore/pools";
 import { deleteQuestion, listQuestionsByPool } from "@/lib/firestore/questions";
 import type { Question } from "@/types";
+import ImportQuestionsDialog from "./ImportQuestionsDialog";
 import QuestionForm, { optionLetter } from "./QuestionForm";
 
 // Turkish-aware lowercase so "İ"/"I" and "i"/"ı" match the way users expect.
@@ -30,6 +31,7 @@ export default function QuestionManager({ poolId }: { poolId: string }) {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState<Editing | null>(null);
   const [deleting, setDeleting] = useState<Question | null>(null);
+  const [importing, setImporting] = useState(false);
 
   const questions = data?.questions;
   const filtered = useMemo(() => {
@@ -64,9 +66,14 @@ export default function QuestionManager({ poolId }: { poolId: string }) {
             <h1 className="text-3xl font-bold">{pool.name}</h1>
             <p className="mt-1 text-base text-muted">{all.length} soru</p>
           </div>
-          <Button size="lg" onClick={() => setEditing({ mode: "new", formKey: 0 })}>
-            + Yeni soru
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="secondary" size="lg" onClick={() => setImporting(true)}>
+              ⬆ Excel&apos;den içe aktar
+            </Button>
+            <Button size="lg" onClick={() => setEditing({ mode: "new", formKey: 0 })}>
+              + Yeni soru
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -82,7 +89,10 @@ export default function QuestionManager({ poolId }: { poolId: string }) {
       )}
 
       {all.length === 0 && (
-        <Alert>Bu havuzda henüz soru yok. “+ Yeni soru” butonuyla ilk soruyu ekleyin.</Alert>
+        <Alert>
+          Bu havuzda henüz soru yok. “+ Yeni soru” ile tek tek ekleyebilir veya “Excel&apos;den içe
+          aktar” ile toplu yükleyebilirsiniz.
+        </Alert>
       )}
       {all.length > 0 && filtered.length === 0 && (
         <Alert>“{search}” için eşleşen soru bulunamadı.</Alert>
@@ -134,6 +144,15 @@ export default function QuestionManager({ poolId }: { poolId: string }) {
           />
         )}
       </Modal>
+
+      <ImportQuestionsDialog
+        open={importing}
+        poolId={pool.id}
+        poolName={pool.name}
+        existingTexts={all.map((q) => q.text)}
+        onClose={() => setImporting(false)}
+        onImported={reload}
+      />
 
       <ConfirmDialog
         open={!!deleting}

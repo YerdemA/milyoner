@@ -49,7 +49,7 @@ export default function ConfirmDialog({
   }
 
   return (
-    <Modal open={open} onClose={close} title={title}>
+    <Modal open={open} onClose={close} title={title} dismissible={!busy}>
       <div className="flex flex-col gap-5">
         <div className="text-base leading-relaxed">{children}</div>
         {error && <Alert tone="error">{error}</Alert>}

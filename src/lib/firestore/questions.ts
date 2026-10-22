@@ -10,6 +10,7 @@ import {
   where,
   type DocumentSnapshot,
 } from "firebase/firestore";
+import { getErrorMessage } from "@/lib/errors";
 import { db } from "@/lib/firebase";
 import { normalizeQuestionInput, validateQuestionInput } from "@/lib/validation";
 import type { Question, QuestionInput } from "@/types";
@@ -58,6 +59,30 @@ export async function createQuestion(input: QuestionInput): Promise<string> {
     updatedAt: serverTimestamp(),
   });
   return ref.id;
+}
+
+/**
+ * Adds many questions, a few at a time so progress can be reported.
+ * Writes are not batched because security rules limit document lookups per batch.
+ * If a write fails, the error message says how many were already added.
+ */
+export async function createQuestions(
+  inputs: QuestionInput[],
+  onProgress?: (done: number) => void,
+): Promise<void> {
+  const chunkSize = 10;
+  let done = 0;
+  for (let i = 0; i < inputs.length; i += chunkSize) {
+    try {
+      await Promise.all(inputs.slice(i, i + chunkSize).map(createQuestion));
+    } catch (err) {
+      throw new Error(
+        `${done} soru eklendikten sonra bir hata oluştu, kalanlar eklenmedi: ${getErrorMessage(err)}`,
+      );
+    }
+    done = Math.min(i + chunkSize, inputs.length);
+    onProgress?.(done);
+  }
 }
 
 export async function updateQuestion(questionId: string, input: QuestionInput): Promise<void> {
