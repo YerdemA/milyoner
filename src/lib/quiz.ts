@@ -36,6 +36,12 @@ export async function buildQuiz(config: QuizConfig): Promise<Quiz> {
   return { config, questions, createdAt: Date.now() };
 }
 
+/** A new round with only the given questions of a finished quiz, in a new random order. */
+export function buildRetryQuiz(quiz: Quiz, questionIds: string[]): Quiz {
+  const questions = shuffle(quiz.questions.filter((q) => questionIds.includes(q.id)));
+  return { config: quiz.config, questions, createdAt: Date.now(), isRetry: true };
+}
+
 // Storage access can throw (private mode, blocked storage), so every call is guarded.
 
 /** sessionStorage: survives a page refresh on the quiz screen, cleared when the tab closes. */
@@ -77,6 +83,31 @@ export function loadQuiz(): Quiz | null {
     return raw ? (JSON.parse(raw) as Quiz) : null;
   } catch {
     return null;
+  }
+}
+
+const TIMER_KEY = "bilgi-yarismasi.timer";
+
+/**
+ * Elapsed countdown time of the current question, so a refresh continues the countdown
+ * where it stopped. (The seconds spent reloading are not counted: the class can't see the question then.)
+ */
+export function saveTimer(quiz: Quiz, index: number, elapsedMs: number) {
+  try {
+    sessionStorage.setItem(TIMER_KEY, JSON.stringify({ createdAt: quiz.createdAt, index, elapsedMs }));
+  } catch {
+    // Not critical.
+  }
+}
+
+export function loadTimer(quiz: Quiz, index: number): number {
+  try {
+    const raw = sessionStorage.getItem(TIMER_KEY);
+    if (!raw) return 0;
+    const saved = JSON.parse(raw) as { createdAt: number; index: number; elapsedMs: number };
+    return saved.createdAt === quiz.createdAt && saved.index === index ? saved.elapsedMs : 0;
+  } catch {
+    return 0;
   }
 }
 

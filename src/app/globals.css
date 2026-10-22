@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
-/* Dark theme tokens shared by the whole app. Used as bg-bg, text-fg, border-line, bg-accent... */
+/* Color tokens used as bg-bg, text-fg, border-line, bg-accent...
+   @theme holds the default "gece" (dark) palette; the other themes override the same variables
+   under [data-theme="..."] (set on <html>, see src/lib/theme.ts). Any element can carry
+   data-theme, which is how the theme switcher previews each palette. */
 @theme {
   --color-bg: #0a0e1a;
   --color-surface: #121829;
@@ -13,6 +16,7 @@
   --color-on-accent: #1a1300;
   --color-success: #34d399;
   --color-danger: #f87171;
+  --color-glow-2: transparent; /* second stage light, only some themes use it */
 }
 
 @theme inline {
@@ -20,8 +24,74 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Same values as @theme: needed when a "gece" preview sits inside another theme. */
+[data-theme="gece"] {
+  --color-bg: #0a0e1a;
+  --color-surface: #121829;
+  --color-raised: #1a2238;
+  --color-line: #2c3756;
+  --color-fg: #eef1f8;
+  --color-muted: #9aa5c0;
+  --color-accent: #f5b83d;
+  --color-accent-strong: #ffcf66;
+  --color-on-accent: #1a1300;
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-glow-2: transparent;
+  color-scheme: dark;
+}
+
+/* Light. Accent/success/danger are darker so text keeps at least 4.5:1 contrast on white. */
+[data-theme="gunduz"] {
+  --color-bg: #f6f3ec;
+  --color-surface: #ffffff;
+  --color-raised: #ece6d9;
+  --color-line: #d3c9b4;
+  --color-fg: #1b1f2e;
+  --color-muted: #5b6172;
+  --color-accent: #b45309;
+  --color-accent-strong: #92400e;
+  --color-on-accent: #ffffff;
+  --color-success: #047857;
+  --color-danger: #b91c1c;
+  --color-glow-2: transparent;
+  color-scheme: light;
+}
+
+/* Vivid: deep purple stage, hot pink accent, cyan second light. Danger is orange-red so it
+   stays distinct from the pink accent. */
+[data-theme="neon"] {
+  --color-bg: #13072e;
+  --color-surface: #1e0e45;
+  --color-raised: #2b1660;
+  --color-line: #4d2c8f;
+  --color-fg: #fdf6ff;
+  --color-muted: #c4b0ea;
+  --color-accent: #ff3fb4;
+  --color-accent-strong: #2ee6ff;
+  --color-on-accent: #1a0020;
+  --color-success: #3df5a0;
+  --color-danger: #ff6a3d;
+  --color-glow-2: #2ee6ff;
+  color-scheme: dark;
+}
+
+/* Stage lighting behind the quiz screen. */
+@utility stage-backdrop {
+  background:
+    radial-gradient(ellipse at top, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 60%),
+    radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--color-glow-2) 12%, transparent), transparent 55%);
+}
+
 body {
   background: var(--color-bg);
   color: var(--color-fg);
   color-scheme: dark;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+[data-theme="gunduz"] body {
+  color-scheme: light;
 }

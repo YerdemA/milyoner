@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 import Button from "@/components/ui/Button";
+import ThemeSwitcher from "@/components/ui/ThemeSwitcher";
 import { signOutAdmin, useAuth } from "./AuthProvider";
 
 const NAV = [
@@ -27,6 +28,7 @@ export default function AdminHeader() {
           <Link href="/" className="text-base text-muted underline-offset-4 hover:text-fg hover:underline">
             Yarışmaya git →
           </Link>
+          <ThemeSwitcher />
           {email && <span className="hidden text-sm text-muted md:inline">{email}</span>}
           <Button variant="ghost" onClick={() => signOutAdmin()}>
             Çıkış

@@ -56,4 +56,6 @@ export type Quiz = {
   config: QuizConfig;
   questions: QuizQuestion[]; // already shuffled; length may be below questionCount if pools are small
   createdAt: number;
+  /** A round of the questions missed in a previous quiz (same config, fewer questions). */
+  isRetry?: boolean;
 };

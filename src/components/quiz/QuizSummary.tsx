@@ -2,14 +2,16 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Alert from "@/components/ui/Alert";
 import Button from "@/components/ui/Button";
 import { getErrorMessage } from "@/lib/errors";
-import { buildQuiz, saveQuiz } from "@/lib/quiz";
+import { buildQuiz, buildRetryQuiz, saveQuiz } from "@/lib/quiz";
 import { finalScore, formatPoints, pointsPerQuestion } from "@/lib/quizConfig";
 import { earnedUnits, type Outcome, type QuestionResult } from "@/lib/quizEngine";
+import { sounds } from "@/lib/sound";
 import type { Quiz } from "@/types";
+import { Confetti, CountUp } from "./effects";
 import { optionLetter } from "./optionLetter";
 
 const OUTCOME: Record<Outcome, { icon: string; label: string; className: string }> = {
@@ -34,6 +36,13 @@ export default function QuizSummary({ quiz, results }: { quiz: Quiz; results: Qu
     { label: "Yanlış", value: count("wrong"), className: "text-danger" },
     ...(quiz.config.timeLimitSec ? [{ label: "Süre doldu", value: count("timeout"), className: "text-danger" }] : []),
   ];
+  const ratio = totalPoints > 0 ? score / totalPoints : 0;
+  // Everything not answered right on the first try: wrong, timed out or right only on the second guess.
+  const missedIds = results.filter((r) => r.outcome !== "correct").map((r) => r.questionId);
+
+  useEffect(() => {
+    sounds.finish(ratio);
+  }, [ratio]);
 
   async function restart() {
     setRestarting(true);
@@ -48,6 +57,7 @@ export default function QuizSummary({ quiz, results }: { quiz: Quiz; results: Qu
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-[4vh] px-6 py-[6vh]">
+      {ratio >= 0.5 && <Confetti seed={quiz.createdAt % 100000} count={140} />}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -55,10 +65,10 @@ export default function QuizSummary({ quiz, results }: { quiz: Quiz; results: Qu
         className="text-center"
       >
         <p className="text-[clamp(1rem,1.6vw,1.75rem)] font-semibold uppercase tracking-[0.3em] text-accent">
-          Yarışma bitti
+          {quiz.isRetry ? "Tekrar turu bitti" : "Yarışma bitti"}
         </p>
         <p className="mt-4 font-black leading-none tabular-nums" style={{ fontSize: "clamp(5rem, 14vw, 13rem)" }}>
-          {score}
+          <CountUp to={score} />
         </p>
         <p className="mt-2 text-[clamp(1.25rem,2vw,2.25rem)] text-muted">/ {totalPoints} puan</p>
       </motion.div>
@@ -73,6 +83,17 @@ export default function QuizSummary({ quiz, results }: { quiz: Quiz; results: Qu
       </dl>
 
       <div className="flex flex-wrap justify-center gap-4">
+        {missedIds.length > 0 && (
+          <Button
+            size="lg"
+            variant="secondary"
+            onClick={() => saveQuiz(buildRetryQuiz(quiz, missedIds))}
+            disabled={restarting}
+            className="h-16 px-8 text-xl"
+          >
+            ↻ Bilinemeyen {missedIds.length} soruyu tekrar sor
+          </Button>
+        )}
         <Button size="lg" onClick={restart} loading={restarting} className="h-16 px-8 text-xl">
           Aynı ayarlarla yeni yarışma
         </Button>

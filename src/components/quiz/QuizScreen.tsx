@@ -25,7 +25,7 @@ export default function QuizScreen() {
   return (
     // Respect the OS "reduce motion" setting.
     <MotionConfig reducedMotion="user">
-      <div className="relative flex flex-1 flex-col bg-[radial-gradient(ellipse_at_top,rgba(245,184,61,0.12),transparent_60%)]">
+      <div className="relative flex flex-1 flex-col stage-backdrop">
         {/* A new quiz (e.g. "same settings again") remounts the game with fresh state. */}
         <QuizGame key={quiz.createdAt} quiz={quiz} />
       </div>

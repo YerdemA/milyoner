@@ -6,6 +6,7 @@ import {
   getCountFromServer,
   getDoc,
   getDocs,
+  getDocsFromCache,
   query,
   serverTimestamp,
   updateDoc,
@@ -49,10 +50,19 @@ export async function renamePool(poolId: string, name: string): Promise<void> {
   await updateDoc(doc(poolsCol, poolId), { name: name.trim() });
 }
 
-/** Number of questions in a pool; used to warn before deleting it. */
+/**
+ * Number of questions in a pool. Offline, counts the questions saved in this browser instead
+ * (see warmOfflineCache), since count queries only work against the server.
+ */
 export async function countQuestionsInPool(poolId: string): Promise<number> {
-  const snap = await getCountFromServer(query(questionsCol, where("poolId", "==", poolId)));
-  return snap.data().count;
+  const q = query(questionsCol, where("poolId", "==", poolId));
+  try {
+    return (await getCountFromServer(q)).data().count;
+  } catch (err) {
+    const cached = await getDocsFromCache(q).catch(() => null);
+    if (cached) return cached.size;
+    throw err;
+  }
 }
 
 /**

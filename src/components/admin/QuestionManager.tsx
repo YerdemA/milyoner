@@ -9,6 +9,7 @@ import Modal from "@/components/ui/Modal";
 import { LoadingState } from "@/components/ui/Spinner";
 import { useAsyncData } from "@/hooks/useAsyncData";
 import { getErrorMessage } from "@/lib/errors";
+import { downloadQuestionsXlsx } from "@/lib/exportQuestions";
 import { getPool } from "@/lib/firestore/pools";
 import { deleteQuestion, listQuestionsByPool } from "@/lib/firestore/questions";
 import type { Question } from "@/types";
@@ -32,6 +33,8 @@ export default function QuestionManager({ poolId }: { poolId: string }) {
   const [editing, setEditing] = useState<Editing | null>(null);
   const [deleting, setDeleting] = useState<Question | null>(null);
   const [importing, setImporting] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
 
   const questions = data?.questions;
   const filtered = useMemo(() => {
@@ -57,6 +60,18 @@ export default function QuestionManager({ poolId }: { poolId: string }) {
   const { pool } = data;
   const all = data.questions;
 
+  async function handleExport() {
+    setExporting(true);
+    setExportError(null);
+    try {
+      await downloadQuestionsXlsx(pool.name, all);
+    } catch (err) {
+      setExportError(getErrorMessage(err));
+    } finally {
+      setExporting(false);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -67,6 +82,17 @@ export default function QuestionManager({ poolId }: { poolId: string }) {
             <p className="mt-1 text-base text-muted">{all.length} soru</p>
           </div>
           <div className="flex flex-wrap gap-3">
+            {all.length > 0 && (
+              <Button
+                variant="secondary"
+                size="lg"
+                onClick={handleExport}
+                loading={exporting}
+                title="Bu havuzdaki soruları Excel dosyası olarak indirir. Dosya tekrar içe aktarılabilir."
+              >
+                ⬇ Excel&apos;e aktar
+              </Button>
+            )}
             <Button variant="secondary" size="lg" onClick={() => setImporting(true)}>
               ⬆ Excel&apos;den içe aktar
             </Button>
@@ -75,6 +101,7 @@ export default function QuestionManager({ poolId }: { poolId: string }) {
             </Button>
           </div>
         </div>
+        {exportError && <Alert tone="error">Dosya oluşturulamadı: {exportError}</Alert>}
       </div>
 
       {all.length > 0 && (

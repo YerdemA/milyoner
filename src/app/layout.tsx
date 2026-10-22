@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 // latin-ext is required for Turkish characters (ğ, ş, ı, İ).
@@ -23,8 +25,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="tr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // The theme script below sets data-theme before React hydrates.
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }

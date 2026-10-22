@@ -2,15 +2,18 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Alert from "@/components/ui/Alert";
 import Button from "@/components/ui/Button";
+import OfflineNotice from "@/components/ui/OfflineNotice";
 import NumberStepper from "@/components/ui/NumberStepper";
 import { LoadingState } from "@/components/ui/Spinner";
 import Switch from "@/components/ui/Switch";
+import ThemeSwitcher from "@/components/ui/ThemeSwitcher";
 import { useAsyncData } from "@/hooks/useAsyncData";
 import { getErrorMessage } from "@/lib/errors";
 import { countQuestionsInPool, listPools } from "@/lib/firestore/pools";
+import { warmOfflineCache } from "@/lib/firestore/offline";
 import { getSettings } from "@/lib/firestore/settings";
 import { buildQuiz, loadLastConfig, saveLastConfig, saveQuiz } from "@/lib/quiz";
 import {
@@ -35,20 +38,28 @@ async function loadSetupData(): Promise<SetupData> {
 export default function QuizSetup() {
   const { data, error, loading } = useAsyncData(loadSetupData);
 
+  // Once the screen is ready, save every pool's questions for offline use.
+  useEffect(() => {
+    if (data) void warmOfflineCache();
+  }, [data]);
+
   return (
     <main className="relative flex flex-1 flex-col">
       {/* Stage light. Clipped by its own wrapper: putting overflow-hidden on <main> (a flex item)
           lets it shrink to the viewport height, which cut off the page and broke scrolling. */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-x-0 -top-40 mx-auto h-[28rem] max-w-4xl rounded-full bg-accent/15 blur-3xl" />
+        <div className="absolute -right-40 bottom-0 h-[24rem] w-[36rem] rounded-full bg-glow-2/10 blur-3xl" />
       </div>
       <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-6 py-10">
-        <header className="text-center">
+        <ThemeSwitcher className="self-end" />
+        <header className="-mt-4 text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-accent">Sınıf içi</p>
           <h1 className="mt-2 text-5xl font-black tracking-tight md:text-6xl">Bilgi Yarışması</h1>
           <p className="mt-3 text-lg text-muted">Soru havuzlarını seçin, ayarları yapın ve yarışmayı başlatın.</p>
         </header>
 
+        <OfflineNotice>Bu bilgisayarda daha önce açılmış sorularla yarışma başlatılabilir.</OfflineNotice>
         {loading && <LoadingState text="Soru havuzları yükleniyor…" />}
         {!!error && <Alert tone="error">Veriler yüklenemedi: {getErrorMessage(error)}</Alert>}
         {data && <SetupForm data={data} />}

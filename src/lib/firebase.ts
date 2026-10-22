@@ -1,6 +1,13 @@
 import { getApp, getApps, initializeApp, type FirebaseOptions } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  initializeFirestore,
+  memoryLocalCache,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  type Firestore,
+} from "firebase/firestore";
 
 // Each variable must be referenced explicitly so Next.js can inline it into the client bundle.
 const firebaseConfig: FirebaseOptions = {
@@ -25,5 +32,23 @@ if (missingKeys.length > 0) {
 
 // Reuse the existing app during hot reload instead of initializing twice.
 export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const db = createFirestore();
 export const auth = getAuth(app);
+
+/**
+ * In the browser, everything read from Firestore is also kept in IndexedDB, so the quiz can
+ * still be set up and played when the classroom loses its internet connection.
+ */
+function createFirestore(): Firestore {
+  try {
+    return initializeFirestore(app, {
+      localCache:
+        typeof window === "undefined"
+          ? memoryLocalCache()
+          : persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    });
+  } catch {
+    // Already initialized (hot reload).
+    return getFirestore(app);
+  }
+}
