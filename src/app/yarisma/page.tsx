@@ -1,10 +1,5 @@
-import PagePlaceholder from "@/components/ui/PagePlaceholder";
+import QuizScreen from "@/components/quiz/QuizScreen";
 
 export default function QuizPage() {
-  return (
-    <PagePlaceholder
-      title="Yarışma"
-      description="Projeksiyon modundaki yarışma ve özet ekranı burada olacak."
-    />
-  );
+  return <QuizScreen />;
 }

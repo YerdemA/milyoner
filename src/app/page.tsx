@@ -1,10 +1,5 @@
-import PagePlaceholder from "@/components/ui/PagePlaceholder";
+import QuizSetup from "@/components/quiz/QuizSetup";
 
 export default function Home() {
-  return (
-    <PagePlaceholder
-      title="Yarışma Kurulumu"
-      description="Soru havuzu, süre ve soru sayısı seçimi burada yapılacak."
-    />
-  );
+  return <QuizSetup />;
 }

@@ -28,3 +28,32 @@ export type QuestionInput = Pick<
 export type AppSettings = {
   defaultTimeLimitSec: number;
 };
+
+// ----- Quiz (lives in the browser only, never stored in Firestore) -----
+
+export type JokerSettings = {
+  fiftyFifty: boolean;
+  extraTime: boolean;
+  doubleAnswer: boolean;
+};
+
+/** What the presenter chooses on the setup screen. */
+export type QuizConfig = {
+  poolIds: string[];
+  questionCount: number;
+  timeLimitSec: number | null; // null = no time limit
+  totalPoints: number;
+  jokers: JokerSettings;
+};
+
+/** The subset of a question the quiz screen needs. */
+export type QuizQuestion = Pick<
+  Question,
+  "id" | "text" | "imageUrl" | "options" | "correctIndex" | "explanation"
+>;
+
+export type Quiz = {
+  config: QuizConfig;
+  questions: QuizQuestion[]; // already shuffled; length may be below questionCount if pools are small
+  createdAt: number;
+};

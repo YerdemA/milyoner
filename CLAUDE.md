@@ -115,10 +115,14 @@ admins/{uid}                     // varsa o kullanıcı admindir; Firebase konso
 
 - [x] Bir yarışmada kaç soru sorulacak? Varsayılan ve üst sınır. → Varsayılan 15, üst sınır 40 (`src/lib/quizConfig.ts`).
 - [x] Puanlama olacak mı? → Evet. Toplam puan (varsayılan 100, kurulum ekranında değiştirilebilir) soru sayısına eşit bölünür. Soru başı puan ondalıklı gösterilir (6,67), toplam puan tam sayıya yuvarlanır (hepsini bilen tam puanı alır).
-- [ ] Takım modu olacak mı? (Sınıf gruplara ayrılıp sırayla mı yarışacak?)
-- [ ] Joker hakları (yarı yarıya vb.) olacak mı?
+- [x] Takım modu olacak mı? → Şimdilik hayır (tek skor). Sonra eklenebilir; kodu buna kapalı yazma.
+- [x] Joker hakları olacak mı? → Evet, üç joker, her biri yarışma başına 1 kez, kurulum ekranında açılıp kapatılabilir:
+  - **Yarı yarıya:** iki yanlış şık elenir (en az 3 şıklı sorularda).
+  - **Süre ekleme:** +30 sn (yalnızca süre sınırı açıkken).
+  - **Çift cevap:** soruyu cevaplamadan önce açılır; ilk tahmin yanlışsa ikinci tahmin hakkı. İkinci tahmin doğruysa **yarım puan**.
+- [x] Şıklar karıştırılsın mı? → Hayır, girildiği sırayla gösterilir (Doğru/Yanlış ve "Hepsi" gibi şıklar bozulmasın diye). Soruların sırası rastgeledir.
 - [x] Yanlış cevapta yarışma bitiyor mu, devam mı ediyor? → Devam ediyor. Yanlış cevap 0 puan, eksi puan yok.
-- [ ] Süre dolunca ne olacak? (Yanlış sayılsın mı, doğru cevap gösterilip geçilsin mi?)
+- [x] Süre dolunca ne olacak? → Yanlış sayılır (0 puan), doğru cevap gösterilir, sonraki soruya Enter/boşluk ile geçilir.
 - [x] Doğru cevaptan sonra açıklama/bilgi notu gösterilecek mi? → Evet, isteğe bağlı `explanation` alanı. *(Ekranda nasıl gösterileceği yarışma ekranında kararlaştırılacak.)*
 - [x] Sorular bize hangi formatta gelecek? Toplu içe aktarma gerekli mi? → Excel (.xlsx) içe aktarma var. Şablon: `public/sablon/soru-sablonu.xlsx`, sütunlar: Soru, A–F, Doğru Cevap (harf), Açıklama. Sorular paneldeki açık havuza eklenir; aynı metinli sorular atlanır. Okuma: `read-excel-file/universal`, mantık: `src/lib/importQuestions.ts`.
 - [ ] Görseller nerede barındırılacak? (Bkz. bölüm 4.)
