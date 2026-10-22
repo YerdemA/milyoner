@@ -1,8 +1,12 @@
 import { listQuestionsByPools } from "@/lib/firestore/questions";
+import type { QuizState } from "@/lib/quizEngine";
 import type { Quiz, QuizConfig, QuizQuestion } from "@/types";
 
 const QUIZ_KEY = "bilgi-yarismasi.quiz";
+const PROGRESS_KEY = "bilgi-yarismasi.progress";
 const LAST_CONFIG_KEY = "bilgi-yarismasi.last-config";
+/** Fired on window when a new quiz is saved, so the quiz screen can pick it up. */
+export const QUIZ_CHANGED_EVENT = "bilgi-yarismasi:quiz-changed";
 
 /** Fisher–Yates shuffle; returns a new array. */
 export function shuffle<T>(items: readonly T[]): T[] {
@@ -38,8 +42,32 @@ export async function buildQuiz(config: QuizConfig): Promise<Quiz> {
 export function saveQuiz(quiz: Quiz) {
   try {
     sessionStorage.setItem(QUIZ_KEY, JSON.stringify(quiz));
+    sessionStorage.removeItem(PROGRESS_KEY);
   } catch {
     // The quiz still works for this page view; only refresh-recovery is lost.
+  }
+  window.dispatchEvent(new Event(QUIZ_CHANGED_EVENT));
+}
+
+/** Progress of the running quiz, so a page refresh continues where it was. */
+export function saveProgress(quiz: Quiz, state: QuizState) {
+  try {
+    sessionStorage.setItem(PROGRESS_KEY, JSON.stringify({ createdAt: quiz.createdAt, state }));
+  } catch {
+    // Not critical.
+  }
+}
+
+export function loadProgress(quiz: Quiz): QuizState | null {
+  try {
+    const raw = sessionStorage.getItem(PROGRESS_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw) as { createdAt: number; state: QuizState };
+    if (saved.createdAt !== quiz.createdAt) return null;
+    // A refresh during the suspense moment would leave the answer half-given; ask again instead.
+    return saved.state.phase === "locked" ? { ...saved.state, phase: "asking", selected: null } : saved.state;
+  } catch {
+    return null;
   }
 }
 

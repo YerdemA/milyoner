@@ -143,7 +143,9 @@ function SetupForm({ data }: { data: SetupData }) {
   const allSelected = usablePools.every((p) => poolIds.includes(p.id));
 
   return (
-    <form onSubmit={handleStart} className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
+    // noValidate: the browser's step check would silently block submit for e.g. 31 s with step 5;
+    // NumberStepper already clamps values to the allowed range.
+    <form onSubmit={handleStart} className="grid gap-8 lg:grid-cols-[1.2fr_1fr]" noValidate>
       {/* Pools */}
       <section className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-4">
@@ -250,7 +252,7 @@ function SetupForm({ data }: { data: SetupData }) {
           </legend>
           <Switch
             label="Yarı yarıya"
-            description="İki yanlış şık elenir."
+            description="Doğru cevapla birlikte yalnızca bir yanlış şık kalır."
             checked={jokers.fiftyFifty}
             onChange={(v) => setJokers((j) => ({ ...j, fiftyFifty: v }))}
           />

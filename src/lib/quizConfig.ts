@@ -17,16 +17,23 @@ export const TOTAL_POINTS = {
 /** Seconds added by the "extra time" joker. */
 export const EXTRA_TIME_SEC = 30;
 
+/** Suspense pause between locking an answer and revealing it. */
+export const SUSPENSE_MS = 2500;
+
+/** The countdown turns red (and later plays a warning sound) in the last seconds. */
+export const COUNTDOWN_WARNING_SEC = 5;
+
 export function pointsPerQuestion(questionCount: number, totalPoints: number): number {
   return questionCount > 0 ? totalPoints / questionCount : 0;
 }
 
 /**
- * Final score: rounded to a whole number so that answering everything correctly
+ * Score shown on screen: rounded to a whole number so that answering everything correctly
  * gives exactly the total (15 × 6.67 would otherwise show as 100.05).
+ * `earnedUnits` counts 1 per correct answer and 0.5 per second-try answer (double answer joker).
  */
-export function finalScore(correctCount: number, questionCount: number, totalPoints: number): number {
-  return Math.round(correctCount * pointsPerQuestion(questionCount, totalPoints));
+export function finalScore(earnedUnits: number, questionCount: number, totalPoints: number): number {
+  return Math.round(earnedUnits * pointsPerQuestion(questionCount, totalPoints));
 }
 
 /** Per-question points with Turkish decimal comma, at most 2 decimals: 6.666… -> "6,67". */

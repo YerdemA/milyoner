@@ -117,7 +117,7 @@ admins/{uid}                     // varsa o kullanıcı admindir; Firebase konso
 - [x] Puanlama olacak mı? → Evet. Toplam puan (varsayılan 100, kurulum ekranında değiştirilebilir) soru sayısına eşit bölünür. Soru başı puan ondalıklı gösterilir (6,67), toplam puan tam sayıya yuvarlanır (hepsini bilen tam puanı alır).
 - [x] Takım modu olacak mı? → Şimdilik hayır (tek skor). Sonra eklenebilir; kodu buna kapalı yazma.
 - [x] Joker hakları olacak mı? → Evet, üç joker, her biri yarışma başına 1 kez, kurulum ekranında açılıp kapatılabilir:
-  - **Yarı yarıya:** iki yanlış şık elenir (en az 3 şıklı sorularda).
+  - **Yarı yarıya:** doğru cevapla birlikte yalnızca bir yanlış şık kalır (4 şıkta iki yanlış elenir; en az 3 şıklı sorularda).
   - **Süre ekleme:** +30 sn (yalnızca süre sınırı açıkken).
   - **Çift cevap:** soruyu cevaplamadan önce açılır; ilk tahmin yanlışsa ikinci tahmin hakkı. İkinci tahmin doğruysa **yarım puan**.
 - [x] Şıklar karıştırılsın mı? → Hayır, girildiği sırayla gösterilir (Doğru/Yanlış ve "Hepsi" gibi şıklar bozulmasın diye). Soruların sırası rastgeledir.
