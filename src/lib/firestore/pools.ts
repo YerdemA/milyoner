@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   getCountFromServer,
+  getDoc,
   getDocs,
   query,
   serverTimestamp,
@@ -27,6 +28,12 @@ function toPool(snap: DocumentSnapshot): Pool {
 export async function listPools(): Promise<Pool[]> {
   const snap = await getDocs(poolsCol);
   return snap.docs.map(toPool).sort(byCreatedAt);
+}
+
+/** Returns null when the pool does not exist (e.g. deleted or a wrong link). */
+export async function getPool(poolId: string): Promise<Pool | null> {
+  const snap = await getDoc(doc(poolsCol, poolId));
+  return snap.exists() ? toPool(snap) : null;
 }
 
 export async function createPool(name: string): Promise<string> {

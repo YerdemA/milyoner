@@ -120,7 +120,7 @@ admins/{uid}                     // varsa o kullanıcı admindir; Firebase konso
 - [ ] Yanlış cevapta yarışma bitiyor mu, devam mı ediyor?
 - [ ] Süre dolunca ne olacak? (Yanlış sayılsın mı, doğru cevap gösterilip geçilsin mi?)
 - [x] Doğru cevaptan sonra açıklama/bilgi notu gösterilecek mi? → Evet, isteğe bağlı `explanation` alanı. *(Ekranda nasıl gösterileceği yarışma ekranında kararlaştırılacak.)*
-- [ ] Sorular bize hangi formatta gelecek? Toplu içe aktarma gerekli mi?
+- [x] Sorular bize hangi formatta gelecek? Toplu içe aktarma gerekli mi? → Şimdilik hayır; sorular admin panelinden elle girilecek. İhtiyaç olursa sonra eklenir.
 - [ ] Görseller nerede barındırılacak? (Bkz. bölüm 4.)
 - [ ] Uygulamanın son adı ve logosu.
 - [ ] Vercel alan adı (`*.vercel.app` alt alan adı).

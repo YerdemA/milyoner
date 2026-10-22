@@ -78,7 +78,7 @@ public/sounds/      ses efektleri (kaynakları CREDITS.md'de)
 ## Yol haritası
 
 - [x] 1. Proje iskeleti ve Firebase bağlantısı
-- [ ] 2. Veri modeli ve Firestore güvenlik kuralları
+- [x] 2. Veri modeli ve Firestore güvenlik kuralları
 - [ ] 3. Yönetim paneli
 - [ ] 4. Yarışma kurulum ekranı
 - [ ] 5. Yarışma ekranı, animasyonlar ve sesler
