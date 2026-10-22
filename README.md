@@ -6,6 +6,8 @@ Hemşirelik dersinde kullanılmak üzere hazırlanan **sınıf içi çoktan seç
 - Öğrenciler cevabı sözlü verir; sunucu (öğretim üyesi ya da bir öğrenci) seçilen şıkkı bilgisayardan işaretler.
 - Öğrencilerin kendi cihazlarından bağlanması, hesap açması veya bir şey yüklemesi gerekmez.
 
+**Canlı adres: https://nabiz-yarisma.vercel.app**
+
 > Teknoloji yığını, geliştirme ortamının kurulumu ve kodun yapısı için: **[Geliştirici rehberi](./docs/README.md)**
 > Proje kararları ve açık noktalar için: [`CLAUDE.md`](./CLAUDE.md)
 
@@ -94,7 +96,7 @@ Hemşirelik dersinde kullanılmak üzere hazırlanan **sınıf içi çoktan seç
 - [x] 3. Yönetim paneli (Excel içe/dışa aktarma dahil)
 - [x] 4. Yarışma kurulum ekranı
 - [x] 5. Yarışma ekranı, animasyonlar, sesler, temalar, çevrimdışı çalışma
-- [ ] 6. Vercel'e yayın
+- [x] 6. Vercel'e yayın
 - [ ] Görsel desteği ve logo (açık noktalar)
 
 ## Lisans ve içerik

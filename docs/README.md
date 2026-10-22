@@ -180,8 +180,12 @@ Bu sürüm eski Next.js'ten farklı davranır. Belgeler `node_modules/next/dist/
 
 ## Yayın (Vercel)
 
-1. Repoyu Vercel'e bağlayın (Hobby planı).
-2. Proje ayarlarında `.env.local`'daki altı `NEXT_PUBLIC_FIREBASE_*` değişkenini girin.
-3. Firebase konsolu → Authentication → Settings → **Authorized domains** listesine `*.vercel.app` adresini ekleyin,
-   yoksa yönetici girişi çalışmaz.
-4. `main` dalına her gönderim otomatik yayınlanır.
+Canlı adres: **https://nabiz-yarisma.vercel.app** (Vercel projesi `yerdems-projects/nabiz`, Hobby planı).
+
+- Proje GitHub reposuna bağlıdır: **`main` dalına her gönderim otomatik yayınlanır.** Elle yayın: `npx vercel deploy --prod`.
+- Ortam değişkenleri: `.env.local`'daki altı `NEXT_PUBLIC_FIREBASE_*` değeri Vercel'de Production ve Development ortamlarına girilidir.
+  Değer değişirse Vercel → Settings → Environment Variables'dan güncellenir ve yeniden yayınlanır.
+- Firebase konsolu → Authentication → Settings → **Authorized domains** listesinde `nabiz-yarisma.vercel.app` bulunmalıdır,
+  yoksa yönetici girişi çalışmaz. Adres değişirse yenisi de eklenir.
+- Bazı ağlardaki filtreler (ör. internet sağlayıcısının "Güvenli İnternet" profili) `*.vercel.app` adreslerini engelleyebilir.
+  Site açılmazsa önce başka bir ağdan (ör. telefonun mobil verisi) denenmelidir.
