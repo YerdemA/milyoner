@@ -62,21 +62,29 @@ questions/{questionId}
   poolId: string
   text: string
   imageUrl: string | null        // şimdilik null, ileride görsel desteği için
-  options: string[]              // şık metinleri
+  options: string[]              // şık metinleri (2–6 arası, varsayılan 4)
   correctIndex: number
+  explanation: string | null     // isteğe bağlı açıklama/bilgi notu, cevaptan sonra gösterilir
   createdAt: Timestamp
   updatedAt: Timestamp
 
 settings/app
-  defaultTimeLimitSec: number
+  defaultTimeLimitSec: number    // 5–300 sn, belge yoksa 30
+
+admins/{uid}                     // varsa o kullanıcı admindir; Firebase konsolundan elle oluşturulur
 ```
+
+- Tipler `src/types`, okuma/yazma fonksiyonları `src/lib/firestore/`, doğrulama limitleri `src/lib/validation.ts` içinde. Limitler `firestore.rules` ile senkron tutulmalı.
+- Havuz silinince içindeki sorular da silinir.
 
 - **Görsel desteği:** Altyapı görsele hazır kurulacak (`imageUrl` alanı ve arayüzde görsel alanı için yer). Sorular şimdilik metin olacak. Görsellerin *nerede barındırılacağı* henüz karar verilmedi *(AÇIK NOKTA)*. Not: yeni Firebase Storage kovaları artık ücretli Blaze planı gerektiriyor ve bütçe sıfır. Bu yüzden Storage'ı varsayılan kabul etme. Alternatifler: görsel URL'si girmek, `public/` klasörü, ücretsiz bir görsel servisi.
 - Şık sayısı başta 4 kabul edilebilir ama modeli sabit 4'e kilitleme.
 
 ## 5. Güvenlik kuralları
 
-- `pools`, `questions`, `settings`: **herkes okuyabilir**, yalnızca giriş yapmış admin yazabilir.
+- `pools`, `questions`, `settings`: **herkes okuyabilir**, yalnızca admin yazabilir. Admin = `admins/{uid}` belgesi olan giriş yapmış kullanıcı. Kurallar yazılan verinin şeklini de doğrular.
+- `admins`: kullanıcı yalnızca kendi belgesini okuyabilir; uygulamadan yazılamaz.
+- Kurallar Firebase CLI ile yayınlanır: `npx firebase-tools deploy --only firestore:rules` (proje `.firebaserc` içinde).
 - Doğru cevabın istemciden görülebilmesi sorun değil (tek bilgisayar, sınav değil, eğlenceli sınıf aktivitesi).
 - Firebase yapılandırma değerleri `.env.local` içinde (`NEXT_PUBLIC_FIREBASE_*`). `.env.local` asla commit edilmez. `.env.example` tutulur.
 - `firestore.rules` dosyası repoda tutulur.
@@ -111,7 +119,7 @@ settings/app
 - [ ] Joker hakları (yarı yarıya vb.) olacak mı?
 - [ ] Yanlış cevapta yarışma bitiyor mu, devam mı ediyor?
 - [ ] Süre dolunca ne olacak? (Yanlış sayılsın mı, doğru cevap gösterilip geçilsin mi?)
-- [ ] Doğru cevaptan sonra açıklama/bilgi notu gösterilecek mi? (Eğitim amaçlı faydalı olabilir.)
+- [x] Doğru cevaptan sonra açıklama/bilgi notu gösterilecek mi? → Evet, isteğe bağlı `explanation` alanı. *(Ekranda nasıl gösterileceği yarışma ekranında kararlaştırılacak.)*
 - [ ] Sorular bize hangi formatta gelecek? Toplu içe aktarma gerekli mi?
 - [ ] Görseller nerede barındırılacak? (Bkz. bölüm 4.)
 - [ ] Uygulamanın son adı ve logosu.

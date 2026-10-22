@@ -1,0 +1,94 @@
+rules_version = '2';
+
+// Everyone can read pools, questions and settings (classroom quiz, no secrets).
+// Only admins can write. A user is an admin when admins/{uid} exists; those
+// documents are created by hand in the Firebase console.
+// Keep the limits below in sync with src/lib/validation.ts.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isNonEmptyString(value, maxLength) {
+      return value is string && value.trim().size() > 0 && value.size() <= maxLength;
+    }
+
+    function isOptionalString(value, maxLength) {
+      return value == null || (value is string && value.size() <= maxLength);
+    }
+
+    function isValidPool(data) {
+      return data.keys().hasOnly(['name', 'createdAt'])
+        && data.keys().hasAll(['name', 'createdAt'])
+        && isNonEmptyString(data.name, 100)
+        && data.createdAt is timestamp;
+    }
+
+    // Rules cannot loop over list items, so per-option length is only checked in the app.
+    function isValidQuestion(data) {
+      return data.keys().hasOnly(['poolId', 'text', 'imageUrl', 'options', 'correctIndex',
+                                  'explanation', 'createdAt', 'updatedAt'])
+        && data.keys().hasAll(['poolId', 'text', 'imageUrl', 'options', 'correctIndex',
+                               'explanation', 'createdAt', 'updatedAt'])
+        && data.poolId is string
+        && exists(/databases/$(database)/documents/pools/$(data.poolId))
+        && isNonEmptyString(data.text, 1000)
+        && isOptionalString(data.imageUrl, 2000)
+        && data.options is list
+        && data.options.size() >= 2
+        && data.options.size() <= 6
+        && !data.options.hasAny([''])
+        && data.correctIndex is int
+        && data.correctIndex >= 0
+        && data.correctIndex < data.options.size()
+        && isOptionalString(data.explanation, 2000)
+        && data.createdAt is timestamp
+        && data.updatedAt == request.time;
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasOnly(['defaultTimeLimitSec'])
+        && data.defaultTimeLimitSec is int
+        && data.defaultTimeLimitSec >= 5
+        && data.defaultTimeLimitSec <= 300;
+    }
+
+    match /pools/{poolId} {
+      allow read: if true;
+      allow create: if isAdmin()
+        && isValidPool(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update: if isAdmin()
+        && isValidPool(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isAdmin();
+    }
+
+    match /questions/{questionId} {
+      allow read: if true;
+      allow create: if isAdmin()
+        && isValidQuestion(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update: if isAdmin()
+        && isValidQuestion(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isAdmin();
+    }
+
+    match /settings/{settingsId} {
+      allow read: if true;
+      allow write: if isAdmin() && settingsId == 'app' && isValidSettings(request.resource.data);
+    }
+
+    // Users may only check whether they themselves are an admin. Managed in the console.
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Everything else is denied by default.
+  }
+}
