@@ -129,7 +129,7 @@ admins/{uid}                     // varsa o kullanıcı admindir; Firebase konso
 - [x] Doğru cevaptan sonra açıklama/bilgi notu gösterilecek mi? → Evet, isteğe bağlı `explanation` alanı. *(Ekranda nasıl gösterileceği yarışma ekranında kararlaştırılacak.)*
 - [x] Sorular bize hangi formatta gelecek? Toplu içe aktarma gerekli mi? → Excel (.xlsx) içe aktarma var. Şablon: `public/sablon/soru-sablonu.xlsx`, sütunlar: Soru, A–F, Doğru Cevap (harf), Açıklama. Sorular paneldeki açık havuza eklenir; aynı metinli sorular atlanır. Okuma: `read-excel-file/universal`, mantık: `src/lib/importQuestions.ts`.
 - [ ] Görseller nerede barındırılacak? (Bkz. bölüm 4.)
-- [ ] Uygulamanın son adı ve logosu.
+- [x] Uygulamanın son adı → **Nabız**, slogan **"Kim Sağlıklı Olmak İster?"**. Logo henüz yok (sekme simgesi geçici: nabız çizgisi, `src/app/icon.svg`).
 - [ ] Vercel alan adı (`*.vercel.app` alt alan adı).
 
 Bu noktalardan biri karara bağlandığında bu dosyayı güncelle ve maddeyi işaretle.

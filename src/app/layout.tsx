@@ -16,8 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bilgi Yarışması",
-  description: "Sınıf içi çoktan seçmeli bilgi yarışması",
+  title: "Nabız · Kim Sağlıklı Olmak İster?",
+  description: "Hemşirelik dersleri için sınıf içi bilgi yarışması",
+  applicationName: "Nabız",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

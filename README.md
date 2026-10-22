@@ -1,4 +1,4 @@
-# Bilgi Yarışması (geçici ad)
+# Nabız: Kim Sağlıklı Olmak İster?
 
 Hemşirelik dersinde kullanılmak üzere hazırlanan **sınıf içi çoktan seçmeli bilgi yarışması**.
 
@@ -95,7 +95,7 @@ Hemşirelik dersinde kullanılmak üzere hazırlanan **sınıf içi çoktan seç
 - [x] 4. Yarışma kurulum ekranı
 - [x] 5. Yarışma ekranı, animasyonlar, sesler, temalar, çevrimdışı çalışma
 - [ ] 6. Vercel'e yayın
-- [ ] Görsel desteği, uygulamanın son adı ve logosu (açık noktalar)
+- [ ] Görsel desteği ve logo (açık noktalar)
 
 ## Lisans ve içerik
 

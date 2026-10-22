@@ -54,9 +54,10 @@ export default function QuizSetup() {
       <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-6 py-10">
         <ThemeSwitcher className="self-end" />
         <header className="-mt-4 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-accent">Sınıf içi</p>
-          <h1 className="mt-2 text-5xl font-black tracking-tight md:text-6xl">Bilgi Yarışması</h1>
-          <p className="mt-3 text-lg text-muted">Soru havuzlarını seçin, ayarları yapın ve yarışmayı başlatın.</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-muted">Sınıf içi bilgi yarışması</p>
+          <h1 className="mt-2 text-6xl font-black tracking-tight md:text-7xl">Nabız</h1>
+          <p className="mt-2 text-2xl font-bold text-accent md:text-3xl">Kim Sağlıklı Olmak İster?</p>
+          <p className="mt-4 text-lg text-muted">Soru havuzlarını seçin, ayarları yapın ve yarışmayı başlatın.</p>
         </header>
 
         <OfflineNotice>Bu bilgisayarda daha önce açılmış sorularla yarışma başlatılabilir.</OfflineNotice>
